@@ -107,10 +107,11 @@ submitGenerateSummaryButton.addEventListener('click', function(e) {
     const rowDivs = carPoolLists.children;
 
     var allCarsSummary = '';
-
+    var carNumber = 1;
+    
     for(const rowDiv of rowDivs) {
         const carDivs = rowDiv.children;
-        var carNumber = 1;
+        
 
         for(const carDiv of carDivs) {
             peopleDivs = carDiv.children;
