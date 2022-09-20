@@ -112,7 +112,6 @@ submitGenerateSummaryButton.addEventListener('click', function(e) {
     for(const rowDiv of rowDivs) {
         const carDivs = rowDiv.children;
         
-
         for(const carDiv of carDivs) {
             peopleDivs = carDiv.children;
             
