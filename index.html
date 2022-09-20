@@ -20,97 +20,51 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="col-12 top-20">
-        <h4>Input People List</h4>
-        <form>
-            <input type="text" id="people_list" value="">
-            <input type="submit" value="Submit" id="submit_people_list">
-        </form>
-    </div>
-    <div class="col-12 top-20">
-        <h4>Add More People</h4>
-        <form>
-            <input type="text" id="additional_people_list" value="">
-            <input type="submit" value="Add more people (seperate by single space)" id="submit_additional_people_list">
-        </form>
-    </div>
-    
-    <div class="col-12 top-20">
-        <h4><input type="number" id="car_capacity" value="5" min="1" max="10">  Passengers per car</h4>
-    </div>
-    
-    <div class="col-12 top-20">
-        <form>
-            <input type="submit" value="If ready create car pools!" id="create_car_pools">
-        </form>
-    </div>
-
-    <div class="col-12 top-20">
-        <h4>Drivers and Passengers so far:</h4>
-        <p id="parsed_people" value=""></p>
-    </div>
-
     <div class="container">
-        <div id="shared-lists" class="row top-40">
-            <div id="example2-left" class="list-group col-3">
-              <div class="list-group-item">Item 1</div>
-              <div class="list-group-item">Item 2</div>
-              <div class="list-group-item">Item 3</div>
-              <div class="list-group-item">Item 4</div>
-              <div class="list-group-item">Item 5</div>
-              <div class="list-group-item">Item 6</div>
-            </div>
-      
-            <div id="example2-right" class="list-group col-3">
-              <div class="list-group-item">Item 1</div>
-              <div class="list-group-item">Item 2</div>
-              <div class="list-group-item">Item 3</div>
-              <div class="list-group-item">Item 4</div>
-              <div class="list-group-item">Item 5</div>
-              <div class="list-group-item">Item 6</div>
-            </div>
-
-            <div id="example2-left" class="list-group col-3">
-                <div class="list-group-item">Item 1</div>
-                <div class="list-group-item">Item 2</div>
-                <div class="list-group-item">Item 3</div>
-                <div class="list-group-item">Item 4</div>
-                <div class="list-group-item">Item 5</div>
-                <div class="list-group-item">Item 6</div>
-            </div>
-            <div id="example2-left" class="list-group col-3">
-                <div class="list-group-item">Item 1</div>
-                <div class="list-group-item">Item 2</div>
-                <div class="list-group-item">Item 3</div>
-                <div class="list-group-item">Item 4</div>
-                <div class="list-group-item">Item 5</div>
-                <div class="list-group-item">Item 6</div>
-            </div>
+        <div class="col-12 top-20">
+            <h4>Input People List</h4>
+            <form>
+                <input type="text" id="people_list" value="">
+                <input type="submit" value="Submit" id="submit_people_list">
+            </form>
+        </div>
+        <div class="col-12 top-20">
+            <h4>Add More People</h4>
+            <form>
+                <input type="text" id="additional_people_list" value="">
+                <input type="submit" value="Add more people (seperate by comma)" id="submit_additional_people_list">
+            </form>
+        </div>
+        
+        <div class="col-12 top-20">
+            <h4><input type="number" id="capacity_per_car" value="5" min="1" max="10">  Passengers per car</h4>
+        </div>
+        
+        <div class="col-12 top-20">
+            <form>
+                <input type="submit" value="If ready create car pools!" id="submit_create_car_pools">
+            </form>
         </div>
 
-        <div id="shared-lists" class="row top-40">
-            <div id="example2-left" class="list-group col-3">
-                <div class="list-group-item">Item 1</div>
-                <div class="list-group-item">Item 2</div>
-                <div class="list-group-item">Item 3</div>
-                <div class="list-group-item">Item 4</div>
-                <div class="list-group-item">Item 5</div>
-                <div class="list-group-item">Item 6</div>
-            </div>
+        <div class="col-12 top-20">
+            <form>
+                <input type="submit" value="Clear People" id="submit_clear_people">
+            </form>
+        </div>
+    
+        <div class="col-12 top-20">
+            <h4>Drivers and Passengers so far:</h4>
+            <p id="parsed_people" value=""></p>
+        </div>
 
-            <div id="example2-right" class="list-group col-3">
-              <div class="list-group-item">Item 1</div>
-              <div class="list-group-item">Item 2</div>
-              <div class="list-group-item">Item 3</div>
-              <div class="list-group-item">Item 4</div>
-              <div class="list-group-item">Item 5</div>
-              <div class="list-group-item">Item 6</div>
-            </div>
+        <div class="col-12 top-20">
+            <h4><input type="submit" value="Generate Summary" id="submit_generate_summary"> Summary:</h4>
+            <p id="summary" value=""></p>
         </div>
     </div>
 
-    
-    
+    <div class="container" id="car_pool_lists">
+    </div>
   </body>
 
   <script src="./Sortable.js"></script>
