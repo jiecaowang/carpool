@@ -14,7 +14,7 @@ const carsPerRow = document.getElementById("cars_per_row");
 
 const carPoolLists =  document.getElementById("car_pool_lists");
 
-const submitClearPeopleButton = document.getElementById("submit_clear_people");
+const submitClearButton = document.getElementById("submit_clear");
 const submitGenerateSummaryButton = document.getElementById("submit_generate_summary");
 
 var people;
@@ -94,11 +94,12 @@ submitCreateCarPoolBotton.addEventListener('click', function(e) {
     });
 });
 
-submitClearPeopleButton.addEventListener('click', function(e) {
+submitClearButton.addEventListener('click', function(e) {
     e.preventDefault();
     people = [];
     carPoolLists.innerHTML = '';
     parsedPeople.innerHTML = '';
+    summary.innerHTML = '';
 });
 
 submitGenerateSummaryButton.addEventListener('click', function(e) {

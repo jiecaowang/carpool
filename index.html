@@ -31,8 +31,8 @@
         <div class="col-12 top-20">
             <h4>Add More People</h4>
             <form>
-                <input type="text" id="additional_people_list" value="">
-                <input type="submit" value="Add more people (seperate by comma)" id="submit_additional_people_list">
+                <input type="text" id="additional_people_list" value="" placeholder="seperate by comma">
+                <input type="submit" value="Add more people" id="submit_additional_people_list">
             </form>
         </div>
         
@@ -41,19 +41,21 @@
         </div>
 
         <div class="col-12 top-20">
-            <h4><input type="number" id="cars_per_row" value="3" min="1" max="4">  Cars per Row</h4>
+            <h4>
+                <input type="number" id="cars_per_row" value="3" min="1" max="4">  Cars per Row
+            </h4>
         </div>
         
         <div class="col-12 top-20">
-            <form>
+            <h4>
                 <input type="submit" value="If Ready Create Car Pools!" id="submit_create_car_pools">
-            </form>
+            </h4>
         </div>
 
         <div class="col-12 top-20">
-            <form>
-                <input type="submit" value="Clear People" id="submit_clear_people">
-            </form>
+            <h4>
+                <input type="submit" value="Clear" id="submit_clear">
+            </h4>
         </div>
     
         <div class="col-12 top-20">
@@ -62,7 +64,9 @@
         </div>
 
         <div class="col-12 top-20">
-            <h4><input type="submit" value="Generate Summary" id="submit_generate_summary"> Summary:</h4>
+            <h4>
+                <input type="submit" value="Generate Summary" id="submit_generate_summary">
+            </h4>
             <p id="summary" value=""></p>
         </div>
     </div>
