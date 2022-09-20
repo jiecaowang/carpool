@@ -1,6 +1,3 @@
-const draggableElements = document.querySelectorAll(".draggable");
-const droppableElements = document.querySelectorAll(".droppable");
-
 const peopleForm = document.getElementById("people_list");
 const submitPeopleListButton = document.getElementById("submit_people_list"); 
 
@@ -13,7 +10,7 @@ const summary = document.getElementById("summary");
 const capacityPerCar = document.getElementById("capacity_per_car");
 const submitCreateCarPoolBotton =  document.getElementById("submit_create_car_pools");
 
-const CARS_PER_ROW = 4;
+const carsPerRow = document.getElementById("cars_per_row");
 
 const carPoolLists =  document.getElementById("car_pool_lists");
 
@@ -63,7 +60,10 @@ submitCreateCarPoolBotton.addEventListener('click', function(e) {
         const carDiv = document.createElement('div');
         const carId = 'car' + carIndex;
         carDiv.id = carId;
-        carDiv.className = 'list-group col-3';
+
+        carDivColNumber = 12/carsPerRow.value;
+        carDiv.className = 'list-group col-' + carDivColNumber;
+
         car.forEach(function(person, personIndex){
             const personDiv = document.createElement('div');
             personDiv.id = carId + 'person' + personIndex;
@@ -80,7 +80,7 @@ submitCreateCarPoolBotton.addEventListener('click', function(e) {
     
     const rowDivs = [];
     while (carDivs.length > 0) {
-        rowDivs.push(carDivs.splice(0, CARS_PER_ROW));
+        rowDivs.push(carDivs.splice(0, carsPerRow.value));
     }
 
     rowDivs.forEach(function(row, rowIndex) {

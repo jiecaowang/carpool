@@ -4,6 +4,10 @@
     cursor: -webkit-grabbing;
 }
 
+body {
+    padding-bottom: 100px;
+}
+
 .top-20 { 
     margin-top: 20px; 
 }
@@ -15,5 +19,3 @@
 .list-group-item:first-child {
     background-color: lightblue;
 }
-
-
