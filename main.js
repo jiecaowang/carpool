@@ -24,7 +24,7 @@ function parsePeople(peopleSourceString) {
     const noNumberPeople = trimmedPeopleSource.replace(/[0-9]/g, '');
 
     // CJK https://www.unicode.org/charts/PDF/U3000.pdf, split by 2 types of chinese comma
-    return noNumberPeople.split(/[,\u002C\uFF0C\+]+/).filter(e => e.trim()).map(e => e.trim());
+    return noNumberPeople.split(/[,\/\u002C\uFF0C\+]+/).filter(e => e.trim()).map(e => e.trim());
 }
 
 submitPeopleListButton.addEventListener('click', function(e) {
