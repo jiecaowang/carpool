@@ -9,7 +9,7 @@ const submitAdditionalPeopleButton = document.getElementById(
 const parsedPeople = document.getElementById("parsed_people");
 const summary = document.getElementById("summary");
 
-const capacityPerCar = document.getElementById("capacity_per_car");
+const carQuantity = document.getElementById("car_quantity");
 const submitCreateCarPoolBotton = document.getElementById(
     "submit_create_car_pools"
 );
@@ -31,7 +31,7 @@ function parsePeople(peopleSourceString) {
 
     // CJK https://www.unicode.org/charts/PDF/U3000.pdf, split by 2 types of chinese comma
     return noNumberPeople
-        .split(/[,\/\u002C\uFF0C\+]+/)
+        .split(/[,\/\u002C\uFF0C\+\.．]+/)
         .filter((e) => e.trim())
         .map((e) => e.trim());
 }
@@ -61,11 +61,13 @@ submitCreateCarPoolBotton.addEventListener("click", function (e) {
         typeof structuredClone === "function"
             ? structuredClone(people)
             : JSON.parse(JSON.stringify(people));
+    
     const cars = [];
-
-    while (peopleTemp.length > 0) {
-        cars.push(peopleTemp.splice(0, capacityPerCar.value));
-    }
+    const carCapacity = Math.floor(peopleTemp.length/carQuantity.value);
+    const peopleOverCarCapacityRemainder = peopleTemp.length % carQuantity.value;
+    for (let car_index = 1; car_index <= carQuantity.value; car_index++) {
+        cars.push(peopleTemp.splice(0, carCapacity + (car_index <= peopleOverCarCapacityRemainder? 1 : 0)));
+      }
 
     const carDivs = [];
     cars.forEach(function (car, carIndex) {
