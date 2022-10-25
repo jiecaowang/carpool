@@ -1,12 +1,10 @@
 const peopleForm = document.getElementById("people_list");
-const submitPeopleListButton = document.getElementById("submit_people_list");
 
 const additionalPeopleForm = document.getElementById("additional_people_list");
 const submitAdditionalPeopleButton = document.getElementById(
     "submit_additional_people_list"
 );
 
-const parsedPeople = document.getElementById("parsed_people");
 const summary = document.getElementById("summary");
 
 const carQuantity = document.getElementById("car_quantity");
@@ -23,6 +21,10 @@ const submitGenerateSummaryButton = document.getElementById(
     "submit_generate_summary"
 );
 
+const personIdPrefix = "person";
+const carIdPrefix = "car";
+const rowIdPrefix = "row";
+
 var people;
 
 function parsePeople(peopleSourceString) {
@@ -36,24 +38,96 @@ function parsePeople(peopleSourceString) {
         .map((e) => e.trim());
 }
 
-submitPeopleListButton.addEventListener("click", function (e) {
-    e.preventDefault();
+const _createCarDiv = function(peopleInCar, carIndex) {
+    const carDiv = document.createElement("div");
+    const carId = carIdPrefix + carIndex;
+    carDiv.id = carId;
 
-    people = parsePeople(peopleForm.value);
+    carDivColNumber = 12 / carsPerRow.value;
+    carDiv.className = "list-group col-" + carDivColNumber;
 
-    parsedPeople.innerHTML = people.toString();
-});
+    peopleInCar.forEach(function (person, personIndex) {
+        const personDiv = document.createElement("div");
+        personDiv.id = carId + personIdPrefix + personIndex;
+        personDiv.className = "list-group-item";
+        personDiv.textContent = person;
+
+        const buttonElement = document.createElement("button");
+        buttonElement.className = "btn-close float-end";
+        buttonElement.ariaLabel = "Close";
+        buttonElement.addEventListener("click", function(e) {
+            e.preventDefault();
+            const immediateCarDiv = personDiv.parentElement;
+            if(immediateCarDiv.children.length === 1) {                
+                var currentRowDiv = immediateCarDiv.parentElement;
+                immediateCarDiv.remove();
+
+                while(currentRowDiv.nextSibling) {
+                    nextRowDiv = currentRowDiv.nextSibling;
+                    const nextRowDivFirstCar = nextRowDiv.firstChild;
+                    currentRowDiv.append(nextRowDivFirstCar);
+                    currentRowDiv = nextRowDiv;
+                }
+
+                if (currentRowDiv.children.length === 0) {
+                    currentRowDiv.remove();
+                }
+            } else {
+                personDiv.remove();
+            }
+        });
+
+        personDiv.appendChild(buttonElement);
+        carDiv.appendChild(personDiv);
+    });
+    new Sortable(carDiv, {
+        group: "shared", // set all lists to same group
+        animation: 150,
+    });
+    
+    return carDiv;
+};
+
+const _createRowDiv = function (rowIndex) {
+    const rowDiv = document.createElement("div");
+    rowDiv.id = rowIdPrefix + rowIndex;
+    rowDiv.className = "row top-40";
+    return rowDiv;
+};
 
 submitAdditionalPeopleButton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    people.push(...parsePeople(additionalPeopleForm.value));
+    const peopleInCar = parsePeople(additionalPeopleForm.value);
 
-    parsedPeople.innerHTML = people.toString();
+    const lastRowDiv = carPoolLists.lastChild;
+    
+    if (lastRowDiv == null) {
+        const rowDiv = _createRowDiv(1);
+        rowDiv.appendChild(_createCarDiv(peopleInCar, 1));
+        carPoolLists.appendChild(rowDiv);
+    } else {
+        const lastCarId = lastRowDiv.lastChild.id.substring(carIdPrefix.length);
+        const lastCarDiv = _createCarDiv(peopleInCar, Number(lastCarId) + 1)
+        if (lastRowDiv.children.length < Number(carsPerRow.value)) {
+            lastRowDiv.appendChild(lastCarDiv);
+        } else {
+            const lastRowId = lastRowDiv.id.substring(rowIdPrefix.length);
+            const newLastRowDiv = _createRowDiv(Number(lastRowId) + 1);
+            newLastRowDiv.appendChild(lastCarDiv);
+            carPoolLists.appendChild(newLastRowDiv);
+        }
+    }
 });
 
 submitCreateCarPoolBotton.addEventListener("click", function (e) {
     e.preventDefault();
+
+    people = parsePeople(peopleForm.value);
+    const peopleInCar = parsePeople(additionalPeopleForm.value);
+    if (peopleInCar.length > 0) {
+        people.push(...peopleInCar);
+    }
 
     carPoolLists.innerHTML = "";
 
@@ -70,26 +144,8 @@ submitCreateCarPoolBotton.addEventListener("click", function (e) {
       }
 
     const carDivs = [];
-    cars.forEach(function (car, carIndex) {
-        const carDiv = document.createElement("div");
-        const carId = "car" + carIndex;
-        carDiv.id = carId;
-
-        carDivColNumber = 12 / carsPerRow.value;
-        carDiv.className = "list-group col-" + carDivColNumber;
-
-        car.forEach(function (person, personIndex) {
-            const personDiv = document.createElement("div");
-            personDiv.id = carId + "person" + personIndex;
-            personDiv.className = "list-group-item";
-            personDiv.textContent = person;
-            carDiv.appendChild(personDiv);
-        });
-        new Sortable(carDiv, {
-            group: "shared", // set all lists to same group
-            animation: 150,
-        });
-        carDivs.push(carDiv);
+    cars.forEach(function (peopleInCar, carIndex) {
+        carDivs.push(_createCarDiv(peopleInCar, carIndex));
     });
 
     const rowDivs = [];
@@ -98,9 +154,7 @@ submitCreateCarPoolBotton.addEventListener("click", function (e) {
     }
 
     rowDivs.forEach(function (row, rowIndex) {
-        const rowDiv = document.createElement("div");
-        rowDiv.id = "row" + rowIndex;
-        rowDiv.className = "row top-40";
+        const rowDiv = _createRowDiv(rowIndex);
         row.forEach(function (carDiv) {
             rowDiv.appendChild(carDiv);
         });
@@ -112,7 +166,6 @@ submitClearButton.addEventListener("click", function (e) {
     e.preventDefault();
     people = [];
     carPoolLists.innerHTML = "";
-    parsedPeople.innerHTML = "";
     summary.innerHTML = "";
 });
 

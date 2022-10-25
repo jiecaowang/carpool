@@ -12,58 +12,54 @@
     <!-- Latest compiled and minified CSS -->
     <link
       rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
     />
 
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-        <div class="col-12 top-20">
+        <div class="row top-20">
             <h4>Add People</h4>
             <form>
-                <input type="text" id="people_list" value="">
-                <input type="submit" value="Submit" id="submit_people_list">
+                <textarea id="people_list" class="form-control col-xs-12" rows="3" ></textarea>
             </form>
         </div>
-        <div class="col-12 top-20">
+        <div class="row top-20">
             <h4>Add More People</h4>
             <form>
-                <input type="text" id="additional_people_list" value="" placeholder="seperate by comma">
+                <textarea id="additional_people_list" class="form-control col-xs-12" rows="1" placeholder="seperate by comma"></textarea>
                 <input type="submit" value="Add more people" id="submit_additional_people_list">
             </form>
         </div>
         
-        <div class="col-12 top-20">
-            <h4><input type="number" id="car_quantity" value="5" min="1" max="10"> Cars</h4>
+        <div class="row top-20">
+            <div class="col-3">
+                <h4>
+                    <input type="number" id="car_quantity" value="6" min="1" max="10"> Cars
+                </h4>
+            </div>
+            <div class="col-3">
+                <h4>
+                    <input type="number" id="cars_per_row" value="3" min="1" max="4"> Cars per Row
+                </h4>
+            </div>
         </div>
 
-        <div class="col-12 top-20">
-            <h4>
-                <input type="number" id="cars_per_row" value="3" min="1" max="4">  Cars per Row
-            </h4>
-        </div>
-        
-        <div class="col-12 top-20">
-            <h4>
-                <input type="submit" value="If Ready Create Car Pools!" id="submit_create_car_pools">
-            </h4>
-        </div>
-
-        <div class="col-12 top-20">
-            <h4>
-                <input type="submit" value="Clear" id="submit_clear">
-            </h4>
-        </div>
-    
-        <div class="col-12 top-20">
-            <h4>Drivers and Passengers so far:</h4>
-            <p id="parsed_people" value=""></p>
+        <div class="row top-20">
+            <div class="col-6">
+                <h4>
+                    <input type="submit" value="Create Car Pools" id="submit_create_car_pools">
+                </h4>
+            </div>
+            <div class="col-6">
+                <h4>
+                    <input type="submit" value="Clear" id="submit_clear">
+                </h4>
+            </div>
         </div>
 
-        <div class="col-12 top-20">
+        <div class="row top-20">
             <h4>
                 <input type="submit" value="Generate Summary" id="submit_generate_summary">
             </h4>
@@ -71,8 +67,7 @@
         </div>
     </div>
 
-    <div class="container" id="car_pool_lists">
-    </div>
+    <div class="container" id="car_pool_lists"></div>
   </body>
 
   <script src="./Sortable.js"></script>

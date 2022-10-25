@@ -19,3 +19,13 @@ body {
 .list-group-item:first-child {
     background-color: lightblue;
 }
+
+.list-group-item {
+    text-align: center;
+    font-size: 32px;
+}
+
+.btn-close:hover {
+    background-color: coral;
+}
+
