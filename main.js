@@ -137,9 +137,10 @@ submitCreateCarPoolBotton.addEventListener("click", function (e) {
             : JSON.parse(JSON.stringify(people));
     
     const cars = [];
-    const carCapacity = Math.floor(peopleTemp.length/carQuantity.value);
-    const peopleOverCarCapacityRemainder = peopleTemp.length % carQuantity.value;
-    for (let car_index = 1; car_index <= carQuantity.value; car_index++) {
+    const actualCarQuantity = peopleTemp.length < Number(carQuantity.value) ? peopleTemp.length : Number(carQuantity.value);
+    const carCapacity = Math.floor(peopleTemp.length/actualCarQuantity);
+    const peopleOverCarCapacityRemainder = peopleTemp.length % actualCarQuantity;
+    for (let car_index = 1; car_index <= actualCarQuantity; car_index++) {
         cars.push(peopleTemp.splice(0, carCapacity + (car_index <= peopleOverCarCapacityRemainder? 1 : 0)));
       }
 
