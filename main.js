@@ -125,9 +125,7 @@ submitCreateCarPoolBotton.addEventListener("click", function (e) {
 
     people = parsePeople(peopleForm.value);
     const peopleInCar = parsePeople(additionalPeopleForm.value);
-    if (peopleInCar.length > 0) {
-        people.push(...peopleInCar);
-    }
+    people.push(...peopleInCar);
 
     carPoolLists.innerHTML = "";
 
