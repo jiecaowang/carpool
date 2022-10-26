@@ -22,7 +22,7 @@ body {
 
 .list-group-item {
     text-align: center;
-    font-size: 32px;
+    font-size: 2rem;
 }
 
 .btn-close:hover {
