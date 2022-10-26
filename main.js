@@ -38,6 +38,16 @@ function parsePeople(peopleSourceString) {
         .map((e) => e.trim());
 }
 
+function removeFadeOut(el) {
+    const speed = 600;
+    const seconds = speed/1000;
+    
+    el.style.transition = "opacity "+ seconds +"s ease";
+    el.style.opacity = 0;
+
+    setTimeout(function() {el.remove();}, speed);
+}
+
 const _createCarDiv = function(peopleInCar, carIndex) {
     const carDiv = document.createElement("div");
     const carId = carIdPrefix + carIndex;
@@ -60,7 +70,7 @@ const _createCarDiv = function(peopleInCar, carIndex) {
             const immediateCarDiv = personDiv.parentElement;
             if(immediateCarDiv.children.length === 1) {                
                 var currentRowDiv = immediateCarDiv.parentElement;
-                immediateCarDiv.remove();
+                removeFadeOut(immediateCarDiv);
 
                 while(currentRowDiv.nextSibling) {
                     nextRowDiv = currentRowDiv.nextSibling;
@@ -70,10 +80,10 @@ const _createCarDiv = function(peopleInCar, carIndex) {
                 }
 
                 if (currentRowDiv.children.length === 0) {
-                    currentRowDiv.remove();
+                    removeFadeOut(currentRowDiv);
                 }
             } else {
-                personDiv.remove();
+                removeFadeOut(personDiv);
             }
         });
 
