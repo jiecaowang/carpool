@@ -33,13 +33,13 @@ function parsePeople(peopleSourceString) {
     const noNumberPeople = trimmedPeopleSource.replace(/[0-9]/g, "");
 
     // CJK https://www.unicode.org/charts/PDF/U3000.pdf, split by 2 types of chinese comma
-    return noNumberPeople        
+    return noNumberPeople
         .split(/[,\/\u002C\uFF0C\+＋\.．]+/)
         .filter((e) => e.trim())
         .map((e) => e.trim());
 }
 
-const _createGroupDiv = function(peopleInGroup, groupIndex) {
+const _createGroupDiv = function (peopleInGroup, groupIndex) {
     const groupDiv = document.createElement("div");
     const groupId = groupIdPrefix + groupIndex;
     groupDiv.id = groupId;
@@ -51,23 +51,68 @@ const _createGroupDiv = function(peopleInGroup, groupIndex) {
         const personDiv = document.createElement("div");
         personDiv.id = groupId + personIdPrefix + personIndex;
         personDiv.className = "list-group-item";
-        
+
         const personTextElement = document.createElement("span");
         personTextElement.textContent = person;
-        personTextElement.addEventListener("dblclick", function(e) {
+
+        personTextElement.addEventListener("dblclick", function (e) {
             e.preventDefault();
             personTextElement.contentEditable = true;
             personTextElement.focus();
+
+            // Get the mouse coordinates
+            var mouseX = e.clientX;
+            var mouseY = e.clientY;
+
+            // Get the caret position at the mouse coordinates
+            let caretPos;
+            let textNode;
+            let offset;
+
+            if (document.caretPositionFromPoint) {
+                caretPos = document.caretPositionFromPoint(e.clientX, e.clientY);
+                textNode = caretPos.offsetNode;
+                offset = caretPos.offset;
+            } else if (document.caretRangeFromPoint) {
+                // Use WebKit-proprietary fallback method
+                caretPos = document.caretRangeFromPoint(e.clientX, e.clientY);
+                textNode = caretPos.startContainer;
+                offset = caretPos.startOffset;
+            } else {
+                // Neither method is supported, do nothing
+                return;
+            }
+
+            // Check if a valid caret position is obtained
+            if (caretPos) {
+                // Create a range object
+                var range = document.createRange();
+
+                // Set the range start position based on the caret position
+                range.setStart(textNode, offset);
+
+                // Collapse the range to set the cursor position
+                range.collapse(true);
+
+                // Get the selection object
+                var selection = window.getSelection();
+
+                // Remove any existing selections
+                selection.removeAllRanges();
+
+                // Add the new range to the selection
+                selection.addRange(range);
+            }
         });
-        personTextElement.addEventListener("blur", function() {
+        personTextElement.addEventListener("blur", function () {
             // This code will execute when editing finishes (element loses focus)
             personTextElement.contentEditable = false; // Disable editing
         });
-        personTextElement.addEventListener("mouseover", function(e) {
+        personTextElement.addEventListener("mouseover", function (e) {
             e.preventDefault();
             personTextElement.style.backgroundColor = "coral";
         });
-        personTextElement.addEventListener("mouseout", function(e) {
+        personTextElement.addEventListener("mouseout", function (e) {
             e.preventDefault();
             personTextElement.style.backgroundColor = "";
         });
@@ -77,14 +122,14 @@ const _createGroupDiv = function(peopleInGroup, groupIndex) {
         const buttonElement = document.createElement("button");
         buttonElement.className = "btn-close float-end";
         buttonElement.ariaLabel = "Close";
-        buttonElement.addEventListener("click", function(e) {
+        buttonElement.addEventListener("click", function (e) {
             e.preventDefault();
             const immediateGroupDiv = personDiv.parentElement;
-            if(immediateGroupDiv.children.length === 1) {                
+            if (immediateGroupDiv.children.length === 1) {
                 var currentRowDiv = immediateGroupDiv.parentElement;
                 immediateGroupDiv.remove();
 
-                while(currentRowDiv.nextSibling) {
+                while (currentRowDiv.nextSibling) {
                     nextRowDiv = currentRowDiv.nextSibling;
                     const nextRowDivFirstGroup = nextRowDiv.firstChild;
                     currentRowDiv.append(nextRowDivFirstGroup);
@@ -100,14 +145,14 @@ const _createGroupDiv = function(peopleInGroup, groupIndex) {
         });
 
         personDiv.appendChild(buttonElement);
-        
+
         groupDiv.appendChild(personDiv);
     });
     new Sortable(groupDiv, {
         group: "shared", // set all lists to same group
         animation: 150,
     });
-    
+
     return groupDiv;
 };
 
@@ -124,14 +169,17 @@ submitAdditionalPeopleButton.addEventListener("click", function (e) {
     const peopleInGroup = parsePeople(additionalPeopleForm.value);
 
     const lastRowDiv = groupPoolLists.lastChild;
-    
+
     if (lastRowDiv == null) {
         const rowDiv = _createRowDiv(1);
         rowDiv.appendChild(_createGroupDiv(peopleInGroup, 1));
         groupPoolLists.appendChild(rowDiv);
     } else {
         const lastGroupId = lastRowDiv.lastChild.id.substring(groupIdPrefix.length);
-        const lastGroupDiv = _createGroupDiv(peopleInGroup, Number(lastGroupId) + 1)
+        const lastGroupDiv = _createGroupDiv(
+            peopleInGroup,
+            Number(lastGroupId) + 1
+        );
         if (lastRowDiv.children.length < Number(groupsPerRow.value)) {
             lastRowDiv.appendChild(lastGroupDiv);
         } else {
@@ -156,14 +204,24 @@ submitCreateGroupPoolBotton.addEventListener("click", function (e) {
         typeof structuredClone === "function"
             ? structuredClone(people)
             : JSON.parse(JSON.stringify(people));
-    
+
     const groups = [];
-    const actualGroupQuantity = peopleTemp.length < Number(groupQuantity.value) ? peopleTemp.length : Number(groupQuantity.value);
-    const groupCapacity = Math.floor(peopleTemp.length/actualGroupQuantity);
-    const peopleOverGroupCapacityRemainder = peopleTemp.length % actualGroupQuantity;
+    const actualGroupQuantity =
+        peopleTemp.length < Number(groupQuantity.value)
+            ? peopleTemp.length
+            : Number(groupQuantity.value);
+    const groupCapacity = Math.floor(peopleTemp.length / actualGroupQuantity);
+    const peopleOverGroupCapacityRemainder =
+        peopleTemp.length % actualGroupQuantity;
     for (let group_index = 1; group_index <= actualGroupQuantity; group_index++) {
-        groups.push(peopleTemp.splice(0, groupCapacity + (group_index <= peopleOverGroupCapacityRemainder? 1 : 0)));
-      }
+        groups.push(
+            peopleTemp.splice(
+                0,
+                groupCapacity +
+                (group_index <= peopleOverGroupCapacityRemainder ? 1 : 0)
+            )
+        );
+    }
 
     const groupDivs = [];
     groups.forEach(function (peopleInGroup, groupIndex) {
