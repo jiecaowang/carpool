@@ -29,10 +29,10 @@ var people;
 
 function parsePeople(peopleSourceString) {
     const trimmedPeopleSource = peopleSourceString.trim();
-    // const noNumberPeople = trimmedPeopleSource.replace(/[0-9]/g, "");
+    const noNumberPeople = trimmedPeopleSource.replace(/[0-9]/g, "");
 
     // CJK https://www.unicode.org/charts/PDF/U3000.pdf, split by 2 types of chinese comma
-    return trimmedPeopleSource
+    return noNumberPeople        
         .split(/[,\/\u002C\uFF0C\+＋\.．]+/)
         .filter((e) => e.trim())
         .map((e) => e.trim());
