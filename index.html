@@ -36,14 +36,14 @@
             <div class="col-sm">
                 <form>
                     <h4>
-                        <input type="number" id="car_quantity" value="6" min="1" max="1000"> Groups
+                        <input type="number" id="group_quantity" value="6" min="1" max="1000"> Groups
                     </h4>
                 </form>
             </div>
             <div class="col-sm">
                 <form>
                     <h4>
-                        <input type="number" id="cars_per_row" value="3" min="1" max="4"> Groups per Row
+                        <input type="number" id="groups_per_row" value="3" min="1" max="4"> Groups per Row
                     </h4>
                 </form>
             </div>
@@ -52,7 +52,7 @@
         <div class="row top-20">
             <div class="col-4">
                 <form>
-                    <button type="submit" class="btn btn-primary" id="submit_create_car_pools">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="submit_create_group_pools">Submit</button>
                 </form>
             </div>
             <div class="col-4">
@@ -62,6 +62,10 @@
             </div>
             <div class="col-4">
                 <form>
+                    <div class="form-check form-switch form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="leader_checkbox" checked>
+                        <label class="form-check-label" for="leader_checkbox">Leader Format</label>
+                    </div>
                     <button type="submit" class="btn btn-success" id="submit_generate_summary">Generate Summary</button>
                 </form>
             </div>
@@ -72,9 +76,9 @@
         </div>
     </div>
 
-    <div class="container" id="car_pool_lists"></div>
+    <div class="container" id="group_pool_lists"></div>
   </body>
 
-  <script src="./Sortable.js"></script>
+  <script src="./Sortable.min.js"></script>
   <script src="main.js"></script>
 </html>

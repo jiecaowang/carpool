@@ -7,22 +7,23 @@ const submitAdditionalPeopleButton = document.getElementById(
 
 const summary = document.getElementById("summary");
 
-const carQuantity = document.getElementById("car_quantity");
-const submitCreateCarPoolBotton = document.getElementById(
-    "submit_create_car_pools"
+const groupQuantity = document.getElementById("group_quantity");
+const submitCreateGroupPoolBotton = document.getElementById(
+    "submit_create_group_pools"
 );
 
-const carsPerRow = document.getElementById("cars_per_row");
+const groupsPerRow = document.getElementById("groups_per_row");
 
-const carPoolLists = document.getElementById("car_pool_lists");
+const groupPoolLists = document.getElementById("group_pool_lists");
 
 const submitClearButton = document.getElementById("submit_clear");
+const leaderCheckbox = document.getElementById("leader_checkbox");
 const submitGenerateSummaryButton = document.getElementById(
     "submit_generate_summary"
 );
 
 const personIdPrefix = "person";
-const carIdPrefix = "car";
+const groupIdPrefix = "group";
 const rowIdPrefix = "row";
 
 var people;
@@ -38,34 +39,55 @@ function parsePeople(peopleSourceString) {
         .map((e) => e.trim());
 }
 
-const _createCarDiv = function(peopleInCar, carIndex) {
-    const carDiv = document.createElement("div");
-    const carId = carIdPrefix + carIndex;
-    carDiv.id = carId;
+const _createGroupDiv = function(peopleInGroup, groupIndex) {
+    const groupDiv = document.createElement("div");
+    const groupId = groupIdPrefix + groupIndex;
+    groupDiv.id = groupId;
 
-    carDivColNumber = 12 / carsPerRow.value;
-    carDiv.className = "list-group col-" + carDivColNumber;
+    groupDivColNumber = 12 / groupsPerRow.value;
+    groupDiv.className = "list-group col-" + groupDivColNumber;
 
-    peopleInCar.forEach(function (person, personIndex) {
+    peopleInGroup.forEach(function (person, personIndex) {
         const personDiv = document.createElement("div");
-        personDiv.id = carId + personIdPrefix + personIndex;
+        personDiv.id = groupId + personIdPrefix + personIndex;
         personDiv.className = "list-group-item";
-        personDiv.textContent = person;
+        
+        const personTextElement = document.createElement("span");
+        personTextElement.textContent = person;
+        personTextElement.addEventListener("dblclick", function(e) {
+            e.preventDefault();
+            personTextElement.contentEditable = true;
+            personTextElement.focus();
+        });
+        personTextElement.addEventListener("blur", function() {
+            // This code will execute when editing finishes (element loses focus)
+            personTextElement.contentEditable = false; // Disable editing
+        });
+        personTextElement.addEventListener("mouseover", function(e) {
+            e.preventDefault();
+            personTextElement.style.backgroundColor = "coral";
+        });
+        personTextElement.addEventListener("mouseout", function(e) {
+            e.preventDefault();
+            personTextElement.style.backgroundColor = "";
+        });
+
+        personDiv.appendChild(personTextElement);
 
         const buttonElement = document.createElement("button");
         buttonElement.className = "btn-close float-end";
         buttonElement.ariaLabel = "Close";
         buttonElement.addEventListener("click", function(e) {
             e.preventDefault();
-            const immediateCarDiv = personDiv.parentElement;
-            if(immediateCarDiv.children.length === 1) {                
-                var currentRowDiv = immediateCarDiv.parentElement;
-                immediateCarDiv.remove();
+            const immediateGroupDiv = personDiv.parentElement;
+            if(immediateGroupDiv.children.length === 1) {                
+                var currentRowDiv = immediateGroupDiv.parentElement;
+                immediateGroupDiv.remove();
 
                 while(currentRowDiv.nextSibling) {
                     nextRowDiv = currentRowDiv.nextSibling;
-                    const nextRowDivFirstCar = nextRowDiv.firstChild;
-                    currentRowDiv.append(nextRowDivFirstCar);
+                    const nextRowDivFirstGroup = nextRowDiv.firstChild;
+                    currentRowDiv.append(nextRowDivFirstGroup);
                     currentRowDiv = nextRowDiv;
                 }
 
@@ -78,14 +100,15 @@ const _createCarDiv = function(peopleInCar, carIndex) {
         });
 
         personDiv.appendChild(buttonElement);
-        carDiv.appendChild(personDiv);
+        
+        groupDiv.appendChild(personDiv);
     });
-    new Sortable(carDiv, {
+    new Sortable(groupDiv, {
         group: "shared", // set all lists to same group
         animation: 150,
     });
     
-    return carDiv;
+    return groupDiv;
 };
 
 const _createRowDiv = function (rowIndex) {
@@ -98,91 +121,91 @@ const _createRowDiv = function (rowIndex) {
 submitAdditionalPeopleButton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    const peopleInCar = parsePeople(additionalPeopleForm.value);
+    const peopleInGroup = parsePeople(additionalPeopleForm.value);
 
-    const lastRowDiv = carPoolLists.lastChild;
+    const lastRowDiv = groupPoolLists.lastChild;
     
     if (lastRowDiv == null) {
         const rowDiv = _createRowDiv(1);
-        rowDiv.appendChild(_createCarDiv(peopleInCar, 1));
-        carPoolLists.appendChild(rowDiv);
+        rowDiv.appendChild(_createGroupDiv(peopleInGroup, 1));
+        groupPoolLists.appendChild(rowDiv);
     } else {
-        const lastCarId = lastRowDiv.lastChild.id.substring(carIdPrefix.length);
-        const lastCarDiv = _createCarDiv(peopleInCar, Number(lastCarId) + 1)
-        if (lastRowDiv.children.length < Number(carsPerRow.value)) {
-            lastRowDiv.appendChild(lastCarDiv);
+        const lastGroupId = lastRowDiv.lastChild.id.substring(groupIdPrefix.length);
+        const lastGroupDiv = _createGroupDiv(peopleInGroup, Number(lastGroupId) + 1)
+        if (lastRowDiv.children.length < Number(groupsPerRow.value)) {
+            lastRowDiv.appendChild(lastGroupDiv);
         } else {
             const lastRowId = lastRowDiv.id.substring(rowIdPrefix.length);
             const newLastRowDiv = _createRowDiv(Number(lastRowId) + 1);
-            newLastRowDiv.appendChild(lastCarDiv);
-            carPoolLists.appendChild(newLastRowDiv);
+            newLastRowDiv.appendChild(lastGroupDiv);
+            groupPoolLists.appendChild(newLastRowDiv);
         }
     }
 });
 
-submitCreateCarPoolBotton.addEventListener("click", function (e) {
+submitCreateGroupPoolBotton.addEventListener("click", function (e) {
     e.preventDefault();
 
     people = parsePeople(peopleForm.value);
-    const peopleInCar = parsePeople(additionalPeopleForm.value);
-    people.push(...peopleInCar);
+    const peopleInGroup = parsePeople(additionalPeopleForm.value);
+    people.push(...peopleInGroup);
 
-    carPoolLists.innerHTML = "";
+    groupPoolLists.innerHTML = "";
 
     const peopleTemp =
         typeof structuredClone === "function"
             ? structuredClone(people)
             : JSON.parse(JSON.stringify(people));
     
-    const cars = [];
-    const actualCarQuantity = peopleTemp.length < Number(carQuantity.value) ? peopleTemp.length : Number(carQuantity.value);
-    const carCapacity = Math.floor(peopleTemp.length/actualCarQuantity);
-    const peopleOverCarCapacityRemainder = peopleTemp.length % actualCarQuantity;
-    for (let car_index = 1; car_index <= actualCarQuantity; car_index++) {
-        cars.push(peopleTemp.splice(0, carCapacity + (car_index <= peopleOverCarCapacityRemainder? 1 : 0)));
+    const groups = [];
+    const actualGroupQuantity = peopleTemp.length < Number(groupQuantity.value) ? peopleTemp.length : Number(groupQuantity.value);
+    const groupCapacity = Math.floor(peopleTemp.length/actualGroupQuantity);
+    const peopleOverGroupCapacityRemainder = peopleTemp.length % actualGroupQuantity;
+    for (let group_index = 1; group_index <= actualGroupQuantity; group_index++) {
+        groups.push(peopleTemp.splice(0, groupCapacity + (group_index <= peopleOverGroupCapacityRemainder? 1 : 0)));
       }
 
-    const carDivs = [];
-    cars.forEach(function (peopleInCar, carIndex) {
-        carDivs.push(_createCarDiv(peopleInCar, carIndex));
+    const groupDivs = [];
+    groups.forEach(function (peopleInGroup, groupIndex) {
+        groupDivs.push(_createGroupDiv(peopleInGroup, groupIndex));
     });
 
     const rowDivs = [];
-    while (carDivs.length > 0) {
-        rowDivs.push(carDivs.splice(0, carsPerRow.value));
+    while (groupDivs.length > 0) {
+        rowDivs.push(groupDivs.splice(0, groupsPerRow.value));
     }
 
     rowDivs.forEach(function (row, rowIndex) {
         const rowDiv = _createRowDiv(rowIndex);
-        row.forEach(function (carDiv) {
-            rowDiv.appendChild(carDiv);
+        row.forEach(function (groupDiv) {
+            rowDiv.appendChild(groupDiv);
         });
-        carPoolLists.appendChild(rowDiv);
+        groupPoolLists.appendChild(rowDiv);
     });
 });
 
 submitClearButton.addEventListener("click", function (e) {
     e.preventDefault();
     people = [];
-    carPoolLists.innerHTML = "";
+    groupPoolLists.innerHTML = "";
     summary.innerHTML = "";
 });
 
 submitGenerateSummaryButton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    const rowDivs = carPoolLists.children;
+    const rowDivs = groupPoolLists.children;
 
-    var allCarsSummary = "";
-    var carNumber = 1;
+    var allGroupsSummary = "";
+    var groupNumber = 1;
 
     for (const rowDiv of rowDivs) {
-        const carDivs = rowDiv.children;
+        const groupDivs = rowDiv.children;
 
-        for (const carDiv of carDivs) {
-            peopleDivs = carDiv.children;
+        for (const groupDiv of groupDivs) {
+            peopleDivs = groupDiv.children;
 
-            const peopleStringOfCar = [];
+            const peopleStringOfGroup = [];
             for (const personDiv of peopleDivs) {
                 const personSourceString = personDiv.textContent;
                 // turn 'Robin (will come home)' to 'Robin'
@@ -190,30 +213,30 @@ submitGenerateSummaryButton.addEventListener("click", function (e) {
                     / *(\(|（)[^)]*(\)|）) */g,
                     ""
                 );
-                peopleStringOfCar.push(personParsed);
+                peopleStringOfGroup.push(personParsed);
             }
 
-            var carSummary = "";
+            var groupSummary = "";
             for (
                 var peopleIndex = 0;
-                peopleIndex < peopleStringOfCar.length;
+                peopleIndex < peopleStringOfGroup.length;
                 peopleIndex++
             ) {
-                const personString = peopleStringOfCar[peopleIndex];
-                if (peopleIndex == 0) {
-                    carSummary = carNumber + ". " + personString + ": ";
-                } else if (peopleIndex != peopleStringOfCar.length - 1) {
-                    carSummary = carSummary + personString + ", ";
+                const personString = peopleStringOfGroup[peopleIndex];
+                if (peopleIndex == 0 && leaderCheckbox.checked) {
+                    groupSummary = groupNumber + ". " + personString + ": ";
+                } else if (peopleIndex != peopleStringOfGroup.length - 1) {
+                    groupSummary = groupSummary + personString + ", ";
                 } else {
-                    carSummary = carSummary + personString;
+                    groupSummary = groupSummary + personString;
                 }
             }
-            if (carSummary !== "") {
-                allCarsSummary = allCarsSummary + carSummary + "<br><br>";
-                carNumber++;
+            if (groupSummary !== "") {
+                allGroupsSummary = allGroupsSummary + groupSummary + "<br><br>";
+                groupNumber++;
             }
         }
     }
 
-    summary.innerHTML = allCarsSummary;
+    summary.innerHTML = allGroupsSummary;
 });
