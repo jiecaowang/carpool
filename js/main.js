@@ -17,7 +17,9 @@ const groupsPerRow = document.getElementById("groups_per_row");
 const groupPoolLists = document.getElementById("group_pool_lists");
 
 const submitClearButton = document.getElementById("submit_clear");
-const leaderCheckbox = document.getElementById("leader_checkbox");
+const chineseHomeMeetingServingCheckbox = document.getElementById(
+    "chinese_home_meeting_serving"
+);
 const submitGenerateSummaryButton = document.getElementById(
     "submit_generate_summary"
 );
@@ -25,10 +27,32 @@ const submitGenerateSummaryButton = document.getElementById(
 const personIdPrefix = "person";
 const groupIdPrefix = "group";
 const rowIdPrefix = "row";
+const CHINESE_HOME_MEETING_HOST_TO_SUMMARY = {
+    张弟兄:
+        "线下聚会去张弟兄/Linda 姊妹家的弟兄姊妹们如下。地址是：163 Borden St，免费停车场：187 Borden St",
+    Linda:
+        "线下聚会去张弟兄/Linda 姊妹家的弟兄姊妹们如下。地址是：163 Borden St，免费停车场：187 Borden St",
+    杨弟兄:
+        "线下聚会去杨弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
+    Jessica:
+        "线下聚会去杨弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
+    赵弟兄:
+        "线下聚会去赵弟兄/Queenie姊妹家的弟兄姊妹们如下。地址是：374 Woburn Ave",
+    Queenie:
+        "线下聚会去赵弟兄/Queenie姊妹家的弟兄姊妹们如下。地址是：374 Woburn Ave",
+    苏弟兄:
+        "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
+    Jessamine:
+        "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
+    刘洋: "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
+    Mahek:
+        "线下聚会去Mahek姊妹家的弟兄姊妹们如下。地址是：585 Bloor St East unit 3615, Toronto",
+    张纶: "线下聚会去Mahek姊妹家的弟兄姊妹们如下。地址是：585 Bloor St East unit 3615, Toronto",
+};
 
 var people;
 
-function parsePeople(peopleSourceString) {
+const _parsePeople = function (peopleSourceString) {
     const trimmedPeopleSource = peopleSourceString.trim();
     const noNumberPeople = trimmedPeopleSource.replace(/[0-9]/g, "");
 
@@ -37,7 +61,7 @@ function parsePeople(peopleSourceString) {
         .split(/[,\/\u002C\uFF0C\+＋\.．]+/)
         .filter((e) => e.trim())
         .map((e) => e.trim());
-}
+};
 
 const _createGroupDiv = function (peopleInGroup, groupIndex) {
     const groupDiv = document.createElement("div");
@@ -163,10 +187,37 @@ const _createRowDiv = function (rowIndex) {
     return rowDiv;
 };
 
+// Sunday is 0, Monday is 1, ..., Friday is 5
+const nextDay = function (x) {
+    var now = new Date();
+    now.setDate(now.getDate() + ((x + (7 - now.getDay())) % 7));
+    return now;
+};
+
+const _getChineseHomeMeetingServingSummaryTitle = function () {
+    nextFriday = nextDay(5);
+    chineseDate = nextFriday.toLocaleDateString("zh-CN", {
+        month: "long",
+        day: "numeric",
+    });
+    return "这周五小排（" + chineseDate + ")";
+};
+
+const _getChineseHomeMeetingServingHostSummary = function (personString) {
+    for (const [host, summary] of Object.entries(
+        CHINESE_HOME_MEETING_HOST_TO_SUMMARY
+    )) {
+        if (personString.includes(host)) {
+            return summary;
+        }
+    }
+    return personString;
+};
+
 submitAdditionalPeopleButton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    const peopleInGroup = parsePeople(additionalPeopleForm.value);
+    const peopleInGroup = _parsePeople(additionalPeopleForm.value);
 
     const lastRowDiv = groupPoolLists.lastChild;
 
@@ -194,8 +245,8 @@ submitAdditionalPeopleButton.addEventListener("click", function (e) {
 submitCreateGroupPoolBotton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    people = parsePeople(peopleForm.value);
-    const peopleInGroup = parsePeople(additionalPeopleForm.value);
+    people = _parsePeople(peopleForm.value);
+    const peopleInGroup = _parsePeople(additionalPeopleForm.value);
     people.push(...peopleInGroup);
 
     groupPoolLists.innerHTML = "";
@@ -281,16 +332,37 @@ submitGenerateSummaryButton.addEventListener("click", function (e) {
                 peopleIndex++
             ) {
                 const personString = peopleStringOfGroup[peopleIndex];
-                if (peopleIndex == 0 && leaderCheckbox.checked) {
-                    groupSummary = groupNumber + ". " + personString + ": ";
-                } else if (peopleIndex != peopleStringOfGroup.length - 1) {
-                    groupSummary = groupSummary + personString + ", ";
+                if (chineseHomeMeetingServingCheckbox.checked) {
+                    // chinese home meeting
+                    if (groupNumber == 1 && peopleIndex == 0) {
+                        groupSummary = groupSummary + _getChineseHomeMeetingServingSummaryTitle() + "<br><br>";
+                    }
+                    if (peopleIndex == 0) {
+                        groupSummary = groupSummary + _getChineseHomeMeetingServingHostSummary(personString) + "<br>————————————————<br>";
+                    } else if (peopleIndex != peopleStringOfGroup.length - 1) {
+                        groupSummary = groupSummary + personString + ", ";
+                    } else {
+                        groupSummary = groupSummary + personString;
+                    }
                 } else {
-                    groupSummary = groupSummary + personString;
+                    // carpool
+                    if (peopleIndex == 0) {
+                        groupSummary = groupNumber + ". " + personString + ": ";
+                    } else if (peopleIndex != peopleStringOfGroup.length - 1) {
+                        groupSummary = groupSummary + personString + ", ";
+                    } else {
+                        groupSummary = groupSummary + personString;
+                    }
                 }
             }
+
             if (groupSummary !== "") {
-                allGroupsSummary = allGroupsSummary + groupSummary + "<br><br>";
+                if (chineseHomeMeetingServingCheckbox.checked) {
+                    allGroupsSummary = allGroupsSummary + groupSummary + "<br>*********************************************************<br>";
+                } else {
+                    allGroupsSummary = allGroupsSummary + groupSummary;
+                }
+                allGroupsSummary = allGroupsSummary + "<br>";
                 groupNumber++;
             }
         }
