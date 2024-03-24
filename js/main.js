@@ -84,10 +84,6 @@ const _createGroupDiv = function (peopleInGroup, groupIndex) {
             personTextElement.contentEditable = true;
             personTextElement.focus();
 
-            // Get the mouse coordinates
-            var mouseX = e.clientX;
-            var mouseY = e.clientY;
-
             // Get the caret position at the mouse coordinates
             let caretPos;
             let textNode;
