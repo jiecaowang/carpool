@@ -44,11 +44,25 @@ const CHINESE_HOME_MEETING_HOST_TO_SUMMARY = {
         "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
     Jessamine:
         "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
-    刘洋: "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
+    刘洋: 
+        "线下聚会去苏弟兄/Jessamine家的弟兄姊妹们如下。地址是：252 Roselawn Ave",
     Mahek:
         "线下聚会去Mahek姊妹家的弟兄姊妹们如下。地址是：585 Bloor St East unit 3615, Toronto",
-    张纶: "线下聚会去Mahek姊妹家的弟兄姊妹们如下。地址是：585 Bloor St East unit 3615, Toronto",
+    张纶: 
+        "线下聚会去Mahek姊妹家的弟兄姊妹们如下。地址是：585 Bloor St East unit 3615, Toronto",
+    李志刚: 
+        "线下聚会去李志刚先生/芳霞姊妹家的弟兄姊妹们如下。地址是：34 Skylark Road, York",
+    芳霞:
+        "线下聚会去李志刚先生/芳霞姊妹家的弟兄姊妹们如下。地址是：34 Skylark Road, York",
+    Felicia:
+        "线下聚会去李志刚先生/芳霞姊妹家的弟兄姊妹们如下。地址是：34 Skylark Road, York",
 };
+Object.keys(CHINESE_HOME_MEETING_HOST_TO_SUMMARY).forEach(key => {
+    if (/^[a-zA-Z]+$/.test(key)) { // Check if key contains only English alphabets
+        const lowerCaseKey = key.toLowerCase();
+        CHINESE_HOME_MEETING_HOST_TO_SUMMARY[lowerCaseKey] = CHINESE_HOME_MEETING_HOST_TO_SUMMARY[key];
+    }
+});
 
 var people;
 
