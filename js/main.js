@@ -32,10 +32,10 @@ const CHINESE_HOME_MEETING_HOST_TO_SUMMARY = {
         "线下聚会去张弟兄/Linda 姊妹家的弟兄姊妹们如下。地址是：163 Borden St，免费停车场：187 Borden St",
     Linda:
         "线下聚会去张弟兄/Linda 姊妹家的弟兄姊妹们如下。地址是：163 Borden St，免费停车场：187 Borden St",
-    杨弟兄:
-        "线下聚会去杨弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
+    Tony:
+        "线下聚会去Tony弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
     Jessica:
-        "线下聚会去杨弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
+        "线下聚会去Tony弟兄/Jessica姊妹家的弟兄姊妹们如下。地址是：333 Lippincott St，免费停车场：187 Borden St",
     赵弟兄:
         "线下聚会去赵弟兄/Queenie姊妹家的弟兄姊妹们如下。地址是：374 Woburn Ave",
     Queenie:
